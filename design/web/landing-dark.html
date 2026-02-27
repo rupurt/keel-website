@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keel Landing Snapshot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030b14;
+      --panel: #0a1626;
+      --panel-2: #0f1f33;
+      --line: rgba(164, 196, 255, 0.22);
+      --text: #e7eef9;
+      --muted: #b3c4db;
+      --accent: #3c6df0;
+      --accent-2: #5d8cff;
+      --glass: rgba(9, 22, 39, 0.48);
+      --shadow: 0 18px 45px rgba(3, 9, 19, 0.4);
+      --tide-cyan: #43e8ff;
+      --tide-sky: #6aaeff;
+      --tide-deep: #21559e;
+      --brass-top: #ffd9a8;
+      --brass-mid: #d9a15e;
+      --brass-deep: #6f4a20;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Space Grotesk', Inter, sans-serif;
+      margin: 0;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+
+    p { margin: 0; }
+
+    .container {
+      width: min(1120px, 92vw);
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      isolation: isolate;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('./hero-bg.webp');
+      background-size: cover;
+      background-position: center 28%;
+      opacity: 0;
+      filter: brightness(0.85);
+      transform: scale(1.03);
+      animation: hero-reveal 1.8s cubic-bezier(0.24, 0.75, 0.32, 1) forwards;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 40%, rgba(2, 8, 18, 0.15) 10%, rgba(2, 8, 18, 0.5) 60%, rgba(2, 8, 18, 0.85) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 34vh;
+      background: linear-gradient(180deg, transparent 0%, rgba(3, 11, 20, 0.68) 58%, var(--bg) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .hero-content,
+    .top-nav {
+      position: relative;
+      z-index: 3;
+    }
+
+    .top-nav {
+      padding-top: 1rem;
+      padding-bottom: 1.7rem;
+      background: linear-gradient(
+        180deg,
+        rgba(2, 8, 18, 0.55) 0%,
+        rgba(2, 8, 18, 0.35) 34%,
+        rgba(2, 8, 18, 0.1) 74%,
+        rgba(2, 8, 18, 0) 100%
+      );
+    }
+
+    .top-nav-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 0.45rem 0;
+    }
+
+    .brand {
+      color: var(--text);
+      text-decoration: none;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.85rem;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      text-shadow: 0 1px 12px rgba(2, 8, 18, 0.65);
+    }
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      gap: clamp(1rem, 2.4vw, 2rem);
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-link {
+      color: #dae6f8;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      opacity: 0.9;
+      text-shadow: 0 1px 8px rgba(2, 7, 16, 0.72);
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      opacity: 1;
+      color: #ffffff;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.85rem 1.7rem;
+      font-size: 0.95rem;
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      position: relative;
+      color: #111111;
+      transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+      z-index: 1;
+      background: transparent;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      z-index: -1;
+      transition: box-shadow 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 6px;
+      border-radius: 50%;
+      filter: blur(4px);
+      z-index: -2;
+      opacity: 0.8;
+      pointer-events: none;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(2px);
+    }
+    
+    .btn:hover::after {
+      bottom: -1px;
+      width: 44px;
+      filter: blur(5px);
+      opacity: 1;
+    }
+
+    .btn-primary::before {
+      background: linear-gradient(180deg, #ffffff 0%, #ebedf0 100%);
+      box-shadow:
+        inset 0 2px 1px rgba(255, 255, 255, 1),
+        inset 0 -2px 1px rgba(0, 0, 0, 0.05),
+        0 1px 1px rgba(0, 0, 0, 0.1),
+        0 5px 0 #b3bdcc,
+        0 10px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn-primary::after {
+      background: #ff8c00;
+      box-shadow: 0 0 10px 2px #ffaa00;
+    }
+
+    .btn-secondary {
+      color: #333333;
+    }
+
+    .btn-secondary::before {
+      background: linear-gradient(180deg, #ffffff 0%, #ebedf0 100%);
+      box-shadow:
+        inset 0 2px 1px rgba(255, 255, 255, 1),
+        inset 0 -2px 1px rgba(0, 0, 0, 0.05),
+        0 1px 1px rgba(0, 0, 0, 0.1),
+        0 5px 0 #b3bdcc,
+        0 10px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-secondary::after {
+      background: #00d9ff;
+      box-shadow: 0 0 10px 2px #43e8ff;
+    }
+
+    .btn-primary:hover::before,
+    .btn-secondary:hover::before {
+      box-shadow:
+        inset 0 2px 1px rgba(255, 255, 255, 1),
+        inset 0 -2px 1px rgba(0, 0, 0, 0.05),
+        0 1px 1px rgba(0, 0, 0, 0.1),
+        0 3px 0 #b3bdcc,
+        0 5px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-content {
+      min-height: calc(100vh - 96px);
+      display: flex;
+      align-items: flex-end;
+      padding: 5.2rem 0 6rem;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      animation: copy-rise 0.9s ease-out 0.35s both;
+    }
+
+    .eyebrow {
+      color: rgba(218, 230, 248, 0.84);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.73rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 4.2rem);
+      line-height: 1.06;
+      margin-bottom: 1.1rem;
+      text-shadow: 0 2px 18px rgba(3, 8, 18, 0.45);
+      max-width: 20ch;
+    }
+
+    .hero-copy p {
+      font-size: clamp(1rem, 1.6vw, 1.38rem);
+      max-width: 60ch;
+      color: var(--muted);
+      margin-bottom: 1.9rem;
+      text-shadow: 0 1px 10px rgba(2, 8, 17, 0.7);
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .section {
+      padding: clamp(4.4rem, 8vw, 6.8rem) 0;
+      border-top: 1px solid rgba(129, 158, 204, 0.2);
+      background: var(--bg);
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      margin-bottom: 1rem;
+    }
+
+    .section-lead {
+      color: var(--muted);
+      max-width: 64ch;
+      margin-bottom: 1.6rem;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: linear-gradient(160deg, rgba(15, 31, 51, 0.88), rgba(8, 17, 30, 0.92));
+      border: 1px solid rgba(155, 188, 237, 0.24);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel.pad { padding: 1.35rem; }
+
+    .mock-header {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      color: #c9dbf8;
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #6fa0ff;
+      box-shadow: 0 0 0 4px rgba(111, 160, 255, 0.12);
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+
+    .flow-item {
+      border: 1px solid rgba(164, 196, 255, 0.22);
+      border-radius: 12px;
+      padding: 0.75rem;
+      background: rgba(16, 34, 57, 0.58);
+      color: #dbe9ff;
+      font-size: 0.9rem;
+      min-height: 82px;
+    }
+
+    .feature-band {
+      background: linear-gradient(180deg, #060f1c, #081526);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.3rem;
+    }
+
+    .feature-card {
+      padding: 1.15rem;
+      border: 1px solid rgba(164, 196, 255, 0.2);
+      border-radius: 14px;
+      background: rgba(14, 31, 53, 0.7);
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .feature-card p { color: #bed0ea; }
+
+    .wide {
+      display: grid;
+      gap: 1.3rem;
+    }
+
+    .diagram {
+      border-radius: 16px;
+      border: 1px dashed rgba(156, 189, 236, 0.45);
+      min-height: clamp(280px, 42vw, 500px);
+      background:
+        linear-gradient(155deg, rgba(13, 28, 47, 0.95), rgba(8, 17, 30, 0.92)),
+        repeating-linear-gradient(90deg, rgba(117, 153, 211, 0.08) 0 1px, transparent 1px 48px),
+        repeating-linear-gradient(0deg, rgba(117, 153, 211, 0.08) 0 1px, transparent 1px 48px);
+      display: grid;
+      place-items: center;
+      color: #b9cce7;
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    .diagram strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+      font-family: 'Space Grotesk', sans-serif;
+      color: #deebff;
+    }
+
+    footer {
+      padding: 2rem 0 3rem;
+      border-top: 1px solid rgba(129, 158, 204, 0.24);
+      color: #9db1cd;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    @keyframes hero-reveal {
+      from {
+        opacity: 0;
+        filter: brightness(0.4);
+        transform: scale(1.04);
+      }
+      to {
+        opacity: 1;
+        filter: brightness(0.85);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes copy-rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 960px) {
+      .top-nav-row {
+        padding: 0.45rem 0;
+      }
+
+      .split,
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-content {
+        align-items: center;
+        min-height: auto;
+        padding: 4rem 0 5rem;
+      }
+
+      .hero {
+        min-height: 92vh;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .top-nav-row {
+        flex-wrap: wrap;
+      }
+
+      .nav-list {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .brand {
+        font-size: 1.6rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .btn {
+        width: 100%;
+      }
+
+      .nav-actions {
+        width: 100%;
+      }
+
+      .hero-cta {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero" id="top">
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <header class="top-nav">
+      <div class="container">
+        <nav class="top-nav-row" aria-label="Primary navigation">
+          <a class="brand" href="#top">keel</a>
+
+          <ul class="nav-list">
+            <li><a class="nav-link" href="#orchestrate">Platform</a></li>
+            <li><a class="nav-link" href="#map">Docs</a></li>
+            <li><a class="nav-link" href="https://github.com" target="_blank" rel="noreferrer">GitHub</a></li>
+          </ul>
+
+          <div class="nav-actions">
+            <a class="btn btn-secondary" href="#top">
+              Watch Demo
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </a>
+            <a class="btn btn-primary" href="#top">
+              Download Keel CLI
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container hero-content">
+      <div class="hero-copy">
+        <p class="eyebrow">Ship Faster. Drift Less.</p>
+        <h1>Command Your Fleet of Autonomous Agents</h1>
+        <p>Harness intelligent agents, minimize drift, and confidently steer your SDLC.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#top">
+            Download Keel CLI
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          </a>
+          <a class="btn btn-secondary" href="#top">
+            Watch Demo
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="section" id="orchestrate">
+      <div class="container split">
+        <div>
+          <h2 class="section-title">Orchestrate Multi-Agent Workflows</h2>
+          <p class="section-lead">Coordinate planning, coding, and validation agents in one deterministic pipeline. Keel provides explicit control points for approvals, retries, and policy gates so teams can automate safely at production scale.</p>
+          <p class="section-lead">Map each delivery stage to a dedicated workflow lane, then monitor handoffs with structured telemetry and release-ready logs.</p>
+        </div>
+
+        <aside class="panel pad" aria-label="Workflow mock UI panel">
+          <div class="mock-header"><span class="dot" aria-hidden="true"></span> Active Workflow: release/2.4</div>
+          <div class="flow-grid">
+            <article class="flow-item"><strong>Plan Agent</strong><br>Spec refinement, risk scoring, and milestone generation.</article>
+            <article class="flow-item"><strong>Build Agent</strong><br>Patch generation with reproducible environment checks.</article>
+            <article class="flow-item"><strong>Review Agent</strong><br>Semantic diff analysis and behavior regression scan.</article>
+            <article class="flow-item"><strong>Ship Agent</strong><br>Release checklist execution and deployment verification.</article>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section feature-band" id="drift">
+      <div class="container">
+        <h2 class="section-title">Detect and Correct Drift</h2>
+        <p class="section-lead">Track expected architecture versus runtime reality. Keel continuously compares policy, infrastructure, and code movement so drift is surfaced before it turns into outages.</p>
+
+        <div class="card-grid">
+          <article class="feature-card">
+            <h3>Policy Drift Alerts</h3>
+            <p>Identify changes that diverge from approved templates and team guardrails in real time.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Automated Remediation</h3>
+            <p>Generate safe corrective patches with confidence scores and explicit rollback paths.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Audit-Ready Timeline</h3>
+            <p>Every action is attributed, signed, and queryable for postmortems and compliance reviews.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="map">
+      <div class="container wide">
+        <h2 class="section-title">Visualize Your SDLC as a Living Map</h2>
+        <p class="section-lead">Give engineering, platform, and security teams a shared operational picture. See where tasks are blocked, where drift is rising, and where automations are delivering measurable throughput.</p>
+
+        <div class="diagram" role="img" aria-label="System diagram placeholder showing a connected software delivery map">
+          <div>
+            <strong>System Diagram Placeholder</strong>
+            Services, pipelines, and agents are represented as connected nodes with state overlays.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">Keel snapshot prototype. Pure HTML and CSS.</div>
+  </footer>
+</body>
+</html>
