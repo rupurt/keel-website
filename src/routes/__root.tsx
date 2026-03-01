@@ -1,9 +1,11 @@
 import {
+  Link,
   createRootRoute,
   HeadContent,
   Outlet,
   Scripts,
 } from '@tanstack/react-router'
+import { SiteFooter } from '~/components/site-footer'
 import appCss from '~/styles/global.css?url'
 
 export const Route = createRootRoute({
@@ -22,6 +24,7 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootLayout,
+  notFoundComponent: RootNotFound,
 })
 
 function RootLayout() {
@@ -30,19 +33,32 @@ function RootLayout() {
       <head>
         <HeadContent />
       </head>
-      <body className="min-h-screen bg-surface-950 text-surface-100 antialiased flex flex-col">
+      <body className="app-shell">
         <main className="flex-1">
           <Outlet />
         </main>
-        <footer className="border-t border-surface-800 py-8 text-sm text-surface-500">
-          <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-6">
-            <p>
-              &copy; {new Date().getFullYear()} Keel. All rights reserved.
-            </p>
-          </div>
-        </footer>
+        <SiteFooter />
         <Scripts />
       </body>
     </html>
+  )
+}
+
+function RootNotFound() {
+  return (
+    <div className="site-container" style={{ padding: '6rem 0' }}>
+      <p className="hero-kicker">404</p>
+      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginBottom: '0.8rem' }}>
+        Page Not Found
+      </h1>
+      <p className="section-lead" style={{ marginTop: 0 }}>
+        The route you requested does not exist.
+      </p>
+      <div className="hero-actions" style={{ marginTop: '1.2rem' }}>
+        <Link className="keel-btn keel-btn-primary" to="/">
+          Back to Landing
+        </Link>
+      </div>
+    </div>
   )
 }
